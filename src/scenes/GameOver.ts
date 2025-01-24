@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+import Phaser, { Scene } from 'phaser';
 
 export class GameOver extends Scene
 {
@@ -16,10 +16,10 @@ export class GameOver extends Scene
         this.camera = this.cameras.main
         this.camera.setBackgroundColor(0xff0000);
 
-        this.background = this.add.image(512, 384, 'background');
+        this.background = this.add.image(400, 300, 'background');
         this.background.setAlpha(0.5);
 
-        this.gameover_text = this.add.text(512, 384, 'Game Over', {
+        this.gameover_text = this.add.text(400, 300, 'Game Over', {
             fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'

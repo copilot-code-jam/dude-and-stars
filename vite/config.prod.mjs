@@ -7,9 +7,6 @@ const phasermsg = () => {
             process.stdout.write(`Building for production...\n`);
         },
         buildEnd() {
-            const line = "---------------------------------------------------------";
-            const msg = `❤️❤️❤️ <Your game here> ❤️❤️❤️`;
-            process.stdout.write(`${line}\n${msg}\n${line}\n`);
             process.stdout.write(`✨ Done ✨\n`);
         }
     }
