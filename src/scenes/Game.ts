@@ -27,6 +27,7 @@ export class Game extends Scene
         this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
         this.load.spritesheet('player', 'https://labs.phaser.io/assets/sprites/dude.png', { frameWidth: 32, frameHeight: 48 });
         this.load.image('bomb', 'https://labs.phaser.io/assets/sprites/shinyball.png');
+        this.load.spritesheet('fireworks', 'https://labs.phaser.io/assets/particles/firework.png', { frameWidth: 128, frameHeight: 128 });
     }
 
     create ()
@@ -57,6 +58,14 @@ export class Game extends Scene
             this.anims.create(anim);
         });
 
+        // Add fireworks animation
+        this.anims.create({
+            key: 'fireworks',
+            frames: this.anims.generateFrameNumbers('fireworks', { start: 0, end: 15 }),
+            frameRate: 20,
+            repeat: 0
+        });
+
         // Add stars
         this.stars = this.physics.add.group({
             key: 'stars',
@@ -64,10 +73,22 @@ export class Game extends Scene
             setXY: { x: 12, y: 0, stepX: 70 }
         });
 
+        const starColors = [
+            0xff0000,    // red
+            0x00ff00,    // green
+            0x0000ff,    // blue
+            0xff00ff,    // magenta
+            0xffff00,    // yellow
+            0x00ffff,    // cyan
+            0xff8800,    // orange
+            0xff0088     // pink
+        ];
+
         this.stars.children.iterate((child: Phaser.GameObjects.GameObject) => {
             const star = child as Phaser.Physics.Arcade.Sprite;
-            star.setScale(0.3); // Scale down the stars
+            star.setScale(0.3);
             star.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+            star.setTint(Phaser.Utils.Array.GetRandom(starColors));
             return null;
         });
 
@@ -86,6 +107,13 @@ export class Game extends Scene
         this.physics.add.collider(this.stars, this.platforms);
         this.physics.add.collider(this.player, this.stars, (player, star) => {
             (star as Phaser.Physics.Arcade.Sprite).disableBody(true, true);
+
+            // Play fireworks animation
+            const fireworks = this.add.sprite(star.x, star.y, 'fireworks');
+            fireworks.play('fireworks');
+            fireworks.on('animationcomplete', () => {
+                fireworks.destroy();
+            });
 
             // Update score
             this.score += 10;
